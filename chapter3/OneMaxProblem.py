@@ -21,11 +21,44 @@ time.
 
 """
 
+import random
+from deap import (
+    base,
+    creator,
+    tools
+)
+import matplotlib.pyplot as plt
+
+# problem constants
+ONE_MAX_LENGTH = 100        # length of bit string to be optimized
+
+# Genetic Algorithm constants
+POPULATION_SIZE = 200       # number of individuals in population
+P_CROSSOVER = 0.9           # probability for crossover
+P_MUTATION = 0.1            # probability for mutating
+
+
+MAX_GENERATIONS = 50        # max number of generations for stopping condition
+
+RANDOM_SEED = 42
+random.seed(RANDOM_SEED)
+
+
+toolbox = base.Toolbox()
+toolbox.register("zeroOrOne", random.randint, 0, 1)
+
+
+creator.create("FitnessMax", base.Fitness, weights=(1.0,))
+
+
+# the convention is to use a class claled Individual to represent each
+# of the population's individuals.
+creator.create("Individual", list, fitness=creator.FitnessMax)
+
 
 
 def main():
     pass
-
 
 if __name__ == "__main__":
     main()
