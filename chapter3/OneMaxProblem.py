@@ -56,9 +56,13 @@ creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Individual", list, fitness=creator.FitnessMax)
 
 
+# register the individualCreator operator, which creates an instance
+# of the individual class, filled up with random values of either 0 or 1
+
+
 
 def main():
-    pass
+    print(toolbox.zeroOrOne())
 
 if __name__ == "__main__":
     main()
