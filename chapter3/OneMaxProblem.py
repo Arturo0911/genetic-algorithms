@@ -2,21 +2,21 @@
 using the DEAP framework
 
 The OneMax (or One-Max) problem is a simple optimization task that is often
-used as the Hello World of genetic algorithm frameworks. We will use this 
+used as the Hello World of genetic algorithm frameworks. We will use this
 problemto demostrate how DEAP can be used to implement a genetic algorithm.
 
 The OneMax task is to find the binary string of a given lenght that maximizes
-the sum of its digits. For example, the OneMax problem of length 5 will 
+the sum of its digits. For example, the OneMax problem of length 5 will
 consider candidates such as the following:
 
     10010 (sum of digits=2)
     01110 (sum of digits=3)
     11111 (sum of digits=5)
 
-Obviously (to us), the solution to this problem is always the string that 
-comprises all 1s. But the genetic algorithm does not have this knowledge, 
-and needs to blindly  look for this solutions using its genetic operators. 
-If the algorithm does its job, it will find the solution, or at least one 
+Obviously (to us), the solution to this problem is always the string that
+comprises all 1s. But the genetic algorithm does not have this knowledge,
+and needs to blindly  look for this solutions using its genetic operators.
+If the algorithm does its job, it will find the solution, or at least one
 close to t, within a reasonable amount of time.
 """
 
@@ -64,11 +64,11 @@ creator.create("Individual", list, fitness=creator.FitnessMax)
 
 # register the individualCreator operator, which creates an instance
 # of the individual class, filled up with random values of either 0 or 1
-toolbox.register("individualCreator", tools.initRepeat, 
+toolbox.register("individualCreator", tools.initRepeat,
         creator.Individual, toolbox.zeroOrOne, ONE_MAX_LENGTH)
 
 
-toolbox.register("populationCreator", 
+toolbox.register("populationCreator",
         tools.initRepeat, list, toolbox.individualCreator)
 
 
@@ -92,7 +92,7 @@ def main():
     # operator to each item in the population. 
 
     fitnessValues = list(map(toolbox.evaluate, population))
-    
+
     # since the items of firnessValues respectively match those
     # in population (which is a list of individuals), we can use
     # the zip() function to combine them and assign the matching
@@ -102,7 +102,7 @@ def main():
     for individual, fitnessValue in zip(population, fitnessValues):
         individual.fitness.values = fitnessValue
 
-    fitnessValues = [individual.fitness.values[0] 
+    fitnessValues = [individual.fitness.values[0]
             for individual in population]
 
     # the statistics collected will be the max fitness value and the mean
@@ -111,6 +111,64 @@ def main():
 
     maxFitnessValues = list()
     meanFitnessValues = list()
+
+    # we are finally ready for the main loop of the genetic flow. At the
+    # top of the loop we find the stopping conditions. As we decided earlier
+    # one stopping condition is set by putting a alimit on the number of
+    # generations, and the other by detecting that we have reached the best
+    # solution (a binary string containing all 1s):
+
+    while max(fitnessValues) < ONE_MAX_LENGTH and \
+            generationCounter < MAX_GENERATIONS:
+
+        generationCounter += 1
+
+        # at the heart of the genetic algorithm are the generic operators,
+        # which are applied next. The first is the selection operator, 
+        # applied using the toolbox.select operator we earlier defined
+        # as the tournament selection. Since we already set the tournament
+        # size when the operator was defined, we only need to send the po-
+        # pulation and its length as arguments now:
+
+        offspring = toolbox.select(population, len(population))
+
+        # the next genetic operator is the crossover. It was earlier defined
+        # as the toolbox.mate operator, and is aliasing a single-point cross-
+        # over. We use Python extended slices to pair every even-ondexed item
+        # of the offspring list with the one following it. We then utilize 
+        # random() function to flip a coin using the crossover probability set
+        # by the P_CROSSOVER constant.
+
+        for child1, child2 in zip(offspring[::2], offspring[1::2]):
+            if random.random() < P_CROSSOVER:
+                toolbox.mate(child1, child2)
+                del child1.fitness.values
+                del child2.fitness.values
+
+        for mutant in offspring:
+            if random.random() < P_MUTATION:
+                toolbox.mutate(mutant)
+                del mutant.fitness.values
+
+
+        freshIndividuals = [ind for ind in offspring if
+                not ind.fitness.valid]
+
+        freshFitnessValues = list(map(toolbox.evaluate, freshIndividuals))
+
+        for individual, firnessValue in zip(freshIndividuals,
+                freshFitnessValues):
+            individuals.fitness.values = fitnessValue
+
+        population[:] = offspring
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
