@@ -22,12 +22,18 @@ time.
 """
 
 import random
+from typing import (
+    Tuple
+)
 from deap import (
     base,
     creator,
     tools
 )
 import matplotlib.pyplot as plt
+
+
+
 
 # problem constants
 ONE_MAX_LENGTH = 100        # length of bit string to be optimized
@@ -58,11 +64,28 @@ creator.create("Individual", list, fitness=creator.FitnessMax)
 
 # register the individualCreator operator, which creates an instance
 # of the individual class, filled up with random values of either 0 or 1
+toolbox.register("individualCreator", tools.initRepeat, 
+        creator.Individual, toolbox.zeroOrOne, ONE_MAX_LENGTH)
 
 
+toolbox.register("populationCreator", 
+        tools.initRepeat, list, toolbox.individualCreator)
+
+
+def oneMaxFitness(individual) -> Tuple[int]:
+    return sum(individual), # return a tuple 
+
+
+
+toolbox.register("evaluate", oneMaxFitness)
+
+toolbox.register("select", tools.selTournament, tournsize=3)
+toolbox.register("mate", tools.cxOnePoint)
+toolbox.register("mutate", tools.MutFlipBit, indpb=1.0/ONE_MAX_LENGTH)
 
 def main():
-    print(toolbox.zeroOrOne())
+    population = toolbox.populationCreator(n=POPULATION_SIZE)
+    generationCounter = 0
 
 if __name__ == "__main__":
     main()
