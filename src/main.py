@@ -9,7 +9,9 @@ from pprint import pprint
 from time import sleep
 import matplotlib.pyplot as plt
 import numpy as np
-from random import randint
+from random import (
+    randint,
+    seed)
 from pwn import *
 
 
@@ -18,52 +20,37 @@ from core.generics import *
 from core.utils import *
 
 
+from core.errors.genetic_exceptions import (
+    FitnessValueComparisonException,
+    GenomeCreatorException,
+    PopulationCretorException
+)
+
+seed(42)
+
+
 class GenomeGenerations:
 
-    def generate_genome(self) -> Iterable[Genome]:
-        return [randint(0, 1) for _ in range(GENOME_SIZE)]
+    def generate_genome(self, genome_size: int) -> Iterable[Genome]:
+
+        if genome_size is None or genome_size <= 0:
+            raise GenomeCreatorException
+        return [randint(0, 1) for _ in range(genome_size)]
 
 
 class PopulationGenerations:
 
     def generate_population(self) -> \
             Iterable[Population]:
-        return [GenomeGenerations().generate_genome()
-            for _ in range(POPULATION_SIZE)]
-
-    # @staticmethod
-    # def one_max_value(individual: Genome) -> FitnessSingle:
-    #     return sum(individual),
-
-    # @staticmethod
-    # def fitness_max(population: Population) -> FitnessScore:
-    #     return list(map(one_max_value, population))
-
-
-
-class Utilities:
-
-    # def make_fitness_values(self, individuals: Any) -> \
-    #     Tuple[int]:
-    #     return sum(individuals),
-
-    def crossover_point(self, child1: Genome, child2: Genome) -> \
-        Tuple[Genome, Genome]:
-
-        size = min(len(child1), len(child2))
-        check_point = randint(1, size - 1)
-        child1[check_point:], child2[check_point:] = \
-            child2[check_point:], child1[check_point:]
-
-        return child1, child2
-
+        return [GenomeGenerations().generate_genome(genome_size=GENOME_SIZE)
+                for _ in range(POPULATION_SIZE)]
 
 
 def main():
 
     log.progress("[*] initializing algorithm...")
 
-    log.info("[*] setting the initial parameters...")
+    log.info("[*] initializing statistics accumulators...")
     max_fitness_values = list()
     mean_fitness_values = list()
     generation_counter = 0
@@ -71,11 +58,11 @@ def main():
     try:
 
         population = PopulationGenerations().generate_population()
-        # sleep(10)
-        # print(population)
         best_fitness = fintess_max_score(population)
-        print(best_fitness)
-        while generation_counter < MAX_NUM_GEN:
+        print(max(best_fitness)[0])
+        print(max(best_fitness)[0] == 61)
+        while max(best_fitness)[0] < ONE_MAX_LENGTH and \
+                generation_counter < MAX_NUM_GEN:
             generation_counter += 1
             continue
         # print(population[::2])
@@ -92,6 +79,7 @@ def main():
         log.warn("[*] Exiting...")
         sleep(2)
         exit(1)
+
 
 if __name__ == "__main__":
     main()

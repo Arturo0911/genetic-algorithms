@@ -133,13 +133,8 @@ def main():
     # print(sum(population[0]))
     # print(fitnessValues)
     for individual, fitnessValue in zip(population, fitnessValues):
-        print(individual.fitness.values)
         individual.fitness.values = fitnessValue
-        print(individual.fitness.values)
-        # print(individual)
-        # print(fitnessValue)
-        print("\n\n\n")
-        # break
+
     fitnessValues = [individual.fitness.values[0]
             for individual in population]
 
@@ -157,7 +152,7 @@ def main():
     # one stopping condition is set by putting a alimit on the number of
     # generations, and the other by detecting that we have reached the best
     # solution (a binary string containing all 1s):
-
+    print(max(fitnessValues))
     while max(fitnessValues) < ONE_MAX_LENGTH and \
             generationCounter < MAX_GENERATIONS:
 

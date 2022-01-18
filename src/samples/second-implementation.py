@@ -76,7 +76,7 @@ def main():
 
     # extract fitness values from all individuals in population:
     fitnessValues = [individual.fitness.values[0] for individual in population]
-
+    
     # initialize statistics accumulators:
     maxFitnessValues = []
     meanFitnessValues = []
