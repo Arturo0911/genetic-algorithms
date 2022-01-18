@@ -1,1 +1,1 @@
-python genetic-testing.py
+python main.py
