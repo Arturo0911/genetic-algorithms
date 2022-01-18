@@ -84,7 +84,7 @@ toolbox.register("mate", tools.cxOnePoint)
 toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/ONE_MAX_LENGTH)
 
 
-def main():
+def implement():
 
     genome = toolbox.individualCreator()
     population = toolbox.populationCreator(n=POPULATION_SIZE)
@@ -96,7 +96,7 @@ def main():
             break
 
 
-def implement():
+def main():
     population = toolbox.populationCreator(n=POPULATION_SIZE)
     generationCounter = 0
 
@@ -118,6 +118,8 @@ def implement():
     fitnessValues = [individual.fitness.values[0]
             for individual in population]
 
+    for x in population:
+        print(x.fitness.values[0])
     # the statistics collected will be the max fitness value and the mean
     # (average) fitness value for each generation. Two lists will be used
     # for tis purrpose, and they are created next:
@@ -147,6 +149,12 @@ def implement():
 
         offspring = list(map(toolbox.clone, offspring))
 
+        # for x in offspring:
+        #     print(x.fitness)
+        #     print(x.fitness.values)
+        #     break
+        # print(offspring)
+        # print(len(offspring))
         # the next genetic operator is the crossover. It was earlier defined
         # as the toolbox.mate operator, and is aliasing a single-point cross-
         # over. We use Python extended slices to pair every even-ondexed item
@@ -156,6 +164,9 @@ def implement():
 
         for child1, child2 in zip(offspring[::2], offspring[1::2]):
             if random.random() < P_CROSSOVER:
+                # print(child1.fitness.values)
+                # print(child1.fitness)
+                # print(child1)
                 toolbox.mate(child1, child2)
                 del child1.fitness.values
                 del child2.fitness.values
@@ -192,8 +203,8 @@ def implement():
         maxFitnessValues.append(maxFitness)
         meanFitnessValues.append(meanFitness)
 
-        print(f"""[*] Generation {generationCounter} : Max Fitness=
-                {maxFitness}, Avg Fitness = {meanFitness}""")
+        # print(f"""[*] Generation {generationCounter} : Max Fitness=
+        #         {maxFitness}, Avg Fitness = {meanFitness}""")
 
 
         # in adition, we locte the index of the (first) best individual
@@ -201,19 +212,19 @@ def implement():
         # individual out
 
         best_index = fitnessValues.index(max(fitnessValues))
-        print("Best Individual = ", *population[best_index], "\n")
+        # print("Best Individual = ", *population[best_index], "\n")
 
 
     # once a stopping condition was activated and the gneetic algorithm
     # flow concludes, we can use the statistics accumulators to plot a 
     # couple of graphs
 
-    plt.plot(maxFitnessValues, color='red')
-    plt.plot(meanFitnessValues, color='green')
-    plt.xlabel('Generation')
-    plt.ylabel('Max / Average Fitness')
-    plt.title("Max and Average firness over Generations")
-    plt.show()
+    # plt.plot(maxFitnessValues, color='red')
+    # plt.plot(meanFitnessValues, color='green')
+    # plt.xlabel('Generation')
+    # plt.ylabel('Max / Average Fitness')
+    # plt.title("Max and Average firness over Generations")
+    # plt.show()
 
 
 
