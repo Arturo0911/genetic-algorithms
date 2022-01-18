@@ -23,8 +23,12 @@ CROSS_PROB = 0.9
 MUT_PROB = 0.1
 MAX_NUM_GEN = 50
 
-
+# Generics
 Genome = List[int]
+Population = List[Genome]
+
+FitnessSingle = Tuple[int]
+FitnessScore = List[Tuple[int]]
 
 
 class GenomeGenerations:
@@ -41,8 +45,17 @@ class PopulationGenerations:
 
     def generate_population(self) -> \
             Iterable[List[GenomeGenerations.generate_genome]]:
-        return [GenomeGenerations().generate_genome() 
+        return [GenomeGenerations().generate_genome()
             for _ in range(POPULATION_SIZE)]
+
+
+    @staticmethod
+    def one_max_value(individual: Genome) -> FitnessSingle:
+        return sum(individual),
+
+    @staticmethod
+    def fitness_max(population: Population) -> FitnessScore:
+        return list(map())
 
 
 
@@ -50,7 +63,7 @@ class Utilities:
 
     def make_fitness_values(self, individuals: Any) -> \
         Tuple[int]:
-        return sum(individuals), 
+        return sum(individuals),
 
     def crossover_point(self, child1: Genome, child2: Genome) -> \
         Tuple[Genome, Genome]:
@@ -59,11 +72,11 @@ class Utilities:
         check_point = randint(1, size - 1)
         child1[check_point:], child2[check_point:] = \
             child2[check_point:], child1[check_point:]
-        
+
         return child1, child2
 
 def get_one_max(individuals) -> Tuple[int]:
-    return sum(individuals), 
+    return sum(individuals),
 
 
 def fitness_values():
@@ -71,7 +84,7 @@ def fitness_values():
 
 
 def main():
-    
+
     log.progress("[*] initializing algorithm...")
 
     log.info("[*] setting the initial settings...")
@@ -79,7 +92,7 @@ def main():
     mean_fitness_values = list()
     generation_counter = 0
 
-    fitness_values = [individuals ]
+    # fitness_values = [individuals ]
 
     try:
 
@@ -94,13 +107,14 @@ def main():
 
         # print(population[1::2])
         # print(len(population[1::2]))
-    
+
     except Exception as e:
         log.error(f"Error by: {str(e)}")
         exit(1)
-    
+
     except KeyboardInterrupt:
         log.warn("[*] Exiting...")
+        sleep(2)
         exit(1)
 
 if __name__ == "__main__":

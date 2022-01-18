@@ -84,6 +84,24 @@ toolbox.register("mate", tools.cxOnePoint)
 toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/ONE_MAX_LENGTH)
 
 
+def main():
+    try:
+        genome = [1, 1, 2, 2, 3, 4, 5, 2, 2, 2, 2, 2, 2]
+        population = toolbox.populationCreator(n=100)
+        print(len(population))
+
+        print()
+        fitness_val = toolbox.evaluate(population)
+        print(fitness_val)
+
+        anotherfit = list(map(toolbox.evaluate, population))
+        print(anotherfit)
+        # evaluing = toolbox.evaluate(genome)
+    except Exception as e:
+        print(str(e))
+        exit(1)
+
+
 def implement():
 
     genome = toolbox.individualCreator()
@@ -96,7 +114,7 @@ def implement():
             break
 
 
-def main():
+def main_back():
     population = toolbox.populationCreator(n=POPULATION_SIZE)
     generationCounter = 0
 
@@ -118,8 +136,8 @@ def main():
     fitnessValues = [individual.fitness.values[0]
             for individual in population]
 
-    for x in population:
-        print(x.fitness.values[0])
+    # for x in population:
+    #     print(x.fitness.values[0])
     # the statistics collected will be the max fitness value and the mean
     # (average) fitness value for each generation. Two lists will be used
     # for tis purrpose, and they are created next:
@@ -218,13 +236,14 @@ def main():
     # once a stopping condition was activated and the gneetic algorithm
     # flow concludes, we can use the statistics accumulators to plot a 
     # couple of graphs
-
-    # plt.plot(maxFitnessValues, color='red')
-    # plt.plot(meanFitnessValues, color='green')
-    # plt.xlabel('Generation')
-    # plt.ylabel('Max / Average Fitness')
-    # plt.title("Max and Average firness over Generations")
-    # plt.show()
+    print(maxFitnessValues)
+    print(meanFitnessValues)
+    plt.plot(maxFitnessValues, color='red')
+    plt.plot(meanFitnessValues, color='green')
+    plt.xlabel('Generation')
+    plt.ylabel('Max / Average Fitness')
+    plt.title("Max and Average firness over Generations")
+    plt.show()
 
 
 
