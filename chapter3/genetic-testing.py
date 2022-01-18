@@ -79,6 +79,8 @@ def main():
     mean_fitness_values = list()
     generation_counter = 0
 
+    fitness_values = [individuals ]
+
     try:
 
         population = PopulationGenerations().generate_population()
