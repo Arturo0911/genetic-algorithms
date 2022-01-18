@@ -129,12 +129,17 @@ def main():
     # the zip() function to combine them and assign the matching
     # itness tuple to each individual
 
-    print(population[0])
-    print(sum(population[0]))
-    print(fitnessValues)
+    # print(population[0])
+    # print(sum(population[0]))
+    # print(fitnessValues)
     for individual, fitnessValue in zip(population, fitnessValues):
+        print(individual.fitness.values)
         individual.fitness.values = fitnessValue
-
+        print(individual.fitness.values)
+        # print(individual)
+        # print(fitnessValue)
+        print("\n\n\n")
+        # break
     fitnessValues = [individual.fitness.values[0]
             for individual in population]
 
