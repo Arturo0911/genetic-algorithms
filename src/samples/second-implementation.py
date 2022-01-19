@@ -2,12 +2,13 @@
 from deap import base
 from deap import creator
 from deap import tools
-
+import time
 import random
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+now = time.time()
 # problem constants:
 ONE_MAX_LENGTH = 100  # length of bit string to be optimized
 
@@ -123,21 +124,25 @@ def main():
         meanFitness = sum(fitnessValues) / len(population)
         maxFitnessValues.append(maxFitness)
         meanFitnessValues.append(meanFitness)
-        print("- Generation {}: Max Fitness = {}, Avg Fitness = {}".format(generationCounter, maxFitness, meanFitness))
+        # print("- Generation {}: Max Fitness = {}, Avg Fitness = {}".format(generationCounter, maxFitness, meanFitness))
 
         # find and print best individual:
         best_index = fitnessValues.index(max(fitnessValues))
-        print("Best Individual = ", *population[best_index], "\n")
+        # print("Best Individual = ", *population[best_index], "\n")
 
     # Genetic Algorithm is done - plot statistics:
-    sns.set_style("whitegrid")
-    plt.plot(maxFitnessValues, color='red')
-    plt.plot(meanFitnessValues, color='green')
-    plt.xlabel('Generation')
-    plt.ylabel('Max / Average Fitness')
-    plt.title('Max and Average Fitness over Generations')
-    plt.show()
+    # sns.set_style("whitegrid")
+    # plt.figure(figsize=(12, 12))
+    # plt.plot(maxFitnessValues, color='red')
+    # plt.plot(meanFitnessValues, color='green')
+    # plt.xlabel('Generación')
+    # plt.ylabel('Máximo / Media puntaje')
+    # plt.title('Máximo y media del puntaje y generaciones')
+    # plt.show()
 
+    print(maxFitnessValues)
+
+    print(f"the time to make this execution was of {time.time() - now}")
 
 if __name__ == '__main__':
     main()

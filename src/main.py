@@ -59,9 +59,9 @@ def main():
 
         population = PopulationGenerations().generate_population()
         best_fitness = fintess_max_score(population)
-        print(max(best_fitness)[0])
-        print(max(best_fitness)[0] == 61)
-        while max(best_fitness)[0] < ONE_MAX_LENGTH and \
+        best_fitness = [fit[0] for fit in best_fitness ]
+
+        while max(best_fitness) < ONE_MAX_LENGTH and \
                 generation_counter < MAX_NUM_GEN:
             generation_counter += 1
             continue
