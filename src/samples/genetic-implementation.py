@@ -4,9 +4,42 @@ from deap import creator
 from deap import tools
 import time
 import random
-
+from pwn import *
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+log.progress("[*] initializing algorithm...")
+
+log.info("[*] initializing statistics accumulators...")
+def banner():
+
+    print("""
+    :'######:::'########:'##::: ##:'########:'########:'####::'######::
+    '##... ##:: ##.....:: ###:: ##: ##.....::... ##..::. ##::'##... ##:
+     ##:::..::: ##::::::: ####: ##: ##:::::::::: ##::::: ##:: ##:::..::
+     ##::'####: ######::: ## ## ##: ######:::::: ##::::: ##:: ##:::::::
+     ##::: ##:: ##...:::: ##. ####: ##...::::::: ##::::: ##:: ##:::::::
+     ##::: ##:: ##::::::: ##:. ###: ##:::::::::: ##::::: ##:: ##::: ##:
+    . ######::: ########: ##::. ##: ########:::: ##::::'####:. ######::
+    :......::::........::..::::..::........:::::..:::::....:::......:::
+
+    :::'###::::'##::::::::'######::::'#######::'########::'####:'########:'##::::'##:'##::::'##:
+    ::'## ##::: ##:::::::'##... ##::'##.... ##: ##.... ##:. ##::... ##..:: ##:::: ##: ###::'###:
+    :'##:. ##:: ##::::::: ##:::..::: ##:::: ##: ##:::: ##:: ##::::: ##:::: ##:::: ##: ####'####:
+    '##:::. ##: ##::::::: ##::'####: ##:::: ##: ########::: ##::::: ##:::: #########: ## ### ##:
+     #########: ##::::::: ##::: ##:: ##:::: ##: ##.. ##:::: ##::::: ##:::: ##.... ##: ##. #: ##:
+     ##.... ##: ##::::::: ##::: ##:: ##:::: ##: ##::. ##::: ##::::: ##:::: ##:::: ##: ##:.:: ##:
+     ##:::: ##: ########:. ######:::. #######:: ##:::. ##:'####:::: ##:::: ##:::: ##: ##:::: ##:
+    ..:::::..::........:::......:::::.......:::..:::::..::....:::::..:::::..:::::..::..:::::..::
+
+    authors:
+        Arturo Negreiros
+        José Hernández
+        Anthony Pin
+        Ricardo Solorzano
+    """)
+
+
 
 now = time.time()
 # problem constants:
@@ -65,7 +98,7 @@ toolbox.register("mutate", tools.mutFlipBit, indpb=1.0/ONE_MAX_LENGTH)
 
 # Genetic Algorithm flow:
 def main():
-
+    banner()
     # create initial population (generation 0):
     population = toolbox.populationCreator(n=POPULATION_SIZE)
     generationCounter = 0
@@ -90,17 +123,19 @@ def main():
         generationCounter = generationCounter + 1
 
         # apply the selection operator, to select the next generation's individuals:
+        
         offspring = toolbox.select(population, len(population))
+        # print(offspring == population)
         # clone the selected individuals:
         offspring = list(map(toolbox.clone, offspring))
 
+        clone = offspring
         # apply the crossover operator to pairs of offspring:
         for child1, child2 in zip(offspring[::2], offspring[1::2]):
             if random.random() < P_CROSSOVER:
                 toolbox.mate(child1, child2)
                 del child1.fitness.values
                 del child2.fitness.values
-
         for mutant in offspring:
             if random.random() < P_MUTATION:
                 toolbox.mutate(mutant)
@@ -131,14 +166,15 @@ def main():
         # print("Best Individual = ", *population[best_index], "\n")
 
     # Genetic Algorithm is done - plot statistics:
-    # sns.set_style("whitegrid")
-    # plt.figure(figsize=(12, 12))
-    # plt.plot(maxFitnessValues, color='red')
-    # plt.plot(meanFitnessValues, color='green')
-    # plt.xlabel('Generación')
-    # plt.ylabel('Máximo / Media puntaje')
-    # plt.title('Máximo y media del puntaje y generaciones')
-    # plt.show()
+    log.success("[*] initializing the plotting successfully")
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(12, 12))
+    plt.plot(maxFitnessValues, color='red')
+    plt.plot(meanFitnessValues, color='green')
+    plt.xlabel('Generación')
+    plt.ylabel('Máximo / Media puntaje')
+    plt.title('Máximo y media del puntaje y generaciones')
+    plt.show()
 
     print(maxFitnessValues)
 
